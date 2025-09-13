@@ -73,7 +73,7 @@ class StudentProgressService
         $totalCategoriesCount = 0;
         $completedCategoriesCount = 0;
         $startedCoursesCount = 0;
-        
+
         foreach ($coursesWithProgress as $course) {
             $categoryName = $course->category->name ?? 'Uncategorized';
 
@@ -104,21 +104,21 @@ class StudentProgressService
             if ($categoryStats[$categoryName]['total_contents'] > 0) {
                 $categoryStats[$categoryName]['progress'] =
                     ($categoryStats[$categoryName]['completed_contents'] / $categoryStats[$categoryName]['total_contents']) * 100;
-                
+
                 // Check if category is completed (all courses in category completed)
-                if ($categoryStats[$categoryName]['completed_courses'] == $categoryStats[$categoryName]['total_courses'] && 
+                if ($categoryStats[$categoryName]['completed_courses'] == $categoryStats[$categoryName]['total_courses'] &&
                     $categoryStats[$categoryName]['total_courses'] > 0) {
                     $completedCategoriesCount++;
                 }
             }
         }
-        
+
         // Calculate Experience (based on started courses across all categories)
         $experience = $totalCourses > 0 ? min(100, ($startedCoursesCount / $totalCourses) * 100) : 0;
-        
+
         // Calculate HP (based on completed courses)
         $hp = $totalCourses > 0 ? min(100, ($completedCourses / $totalCourses) * 100) : 0;
-        
+
         // Calculate MP (based on completed categories)
         $mp = $totalCategoriesCount > 0 ? min(100, ($completedCategoriesCount / $totalCategoriesCount) * 100) : 0;
 

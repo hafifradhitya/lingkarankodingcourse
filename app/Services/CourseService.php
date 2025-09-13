@@ -130,12 +130,28 @@ class CourseService
             app(\App\Services\StudentProgressService::class)->markAsCompleted($course, $currentContent);
         }
 
+        // Periksa apakah semua konten telah diselesaikan
+        $allContents = collect();
+        foreach ($course->courseSections as $section) {
+            $allContents = $allContents->merge($section->sectionContents);
+        }
+        
+        $completedContents = app(\App\Services\StudentProgressService::class)->getCompletedContents($course);
+        $completedContentIds = $completedContents->pluck('id');
+        
+        // Hitung total konten dan jumlah konten yang telah diselesaikan
+        $totalContents = $allContents->count();
+        $completedCount = $completedContentIds->count();
+        
+        // Tombol Finish hanya muncul jika semua konten telah diselesaikan atau tidak ada konten berikutnya
+        $isAllCompleted = $totalContents > 0 && $completedCount >= $totalContents;
+        
         return [
             'course' => $course,
             'currentSection' => $currentSection,
             'currentContent' => $currentContent,
             'nextContent' => $nextContent,
-            'isFinished' => !$nextContent,
+            'isFinished' => !$nextContent && $isAllCompleted,
         ];
 
     }

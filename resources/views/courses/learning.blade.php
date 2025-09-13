@@ -134,20 +134,42 @@
                                 <span class="font-semibold">Ask Mentor</span>
                             </a>
 
-                            @if (!$isFinished)
-                                <a href="{{ route('dashboard.course.learning', [
-                                    'course' => $course->slug,
-                                    'courseSection' => $nextContent->course_section_id,
-                                    'sectionContent' => $nextContent->id,
-                                ]) }}"
-                                    class="rounded-full border bg-obito-green text-white px-5 py-[10px] hover:drop-shadow-effect transition-all duration-300">
-                                    <span class="font-semibold">Next Lesson</span>
-                                </a>
+                            @if (!$isFinished && $nextContent)
+                <a href="{{ route('dashboard.course.learning', [
+                    'course' => $course->slug,
+                    'courseSection' => $nextContent->course_section_id,
+                    'sectionContent' => $nextContent->id,
+                ]) }}"
+                    class="rounded-full border bg-obito-green text-white px-5 py-[10px] hover:drop-shadow-effect transition-all duration-300">
+                    <span class="font-semibold">Next Lesson</span>
+                </a>
                             @else
-                                <a href="{{ route('dashboard.course.learning.finished', $course->slug) }}"
-                                    class="rounded-full border bg-obito-green text-white px-5 py-[10px] hover:drop-shadow-effect transition-all duration-300">
-                                    <span class="font-semibold">Finish Learning</span>
-                                </a>
+                                @php
+                                    $allContents = collect();
+                                    foreach ($course->courseSections as $section) {
+                                        $allContents = $allContents->merge($section->sectionContents);
+                                    }
+                                    
+                                    $completedContents = app(\App\Services\StudentProgressService::class)->getCompletedContents($course);
+                                    $completedContentIds = $completedContents->pluck('id');
+                                    
+                                    $totalContents = $allContents->count();
+                                    $completedCount = $completedContentIds->count();
+                                    
+                                    $isAllCompleted = $totalContents > 0 && $completedCount >= $totalContents;
+                                @endphp
+                                
+                                @if ($isAllCompleted)
+                                    <a href="{{ route('dashboard.course.learning.finished', $course->slug) }}"
+                                        class="rounded-full border bg-obito-green text-white px-5 py-[10px] hover:drop-shadow-effect transition-all duration-300">
+                                        <span class="font-semibold">Finish Learning</span>
+                                    </a>
+                                @else
+                                    <a href="{{ route('dashboard.course.details', $course->slug) }}"
+                                        class="rounded-full border bg-obito-green text-white px-5 py-[10px] hover:drop-shadow-effect transition-all duration-300">
+                                        <span class="font-semibold">Back</span>
+                                    </a>
+                                @endif
                             @endif
                         </div>
                     </div>

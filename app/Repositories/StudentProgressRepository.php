@@ -27,10 +27,10 @@ class StudentProgressRepository implements StudentProgressRepositoryInterface
                 'completed_at' => Carbon::now(),
             ]
         );
-        
+
         return $progress->wasRecentlyCreated || $progress->wasChanged();
     }
-    
+
     /**
      * Get all completed section contents for a user in a course
      */
@@ -42,7 +42,7 @@ class StudentProgressRepository implements StudentProgressRepositoryInterface
             ->get()
             ->pluck('sectionContent');
     }
-    
+
     /**
      * Get progress percentage for a user in a course
      */
@@ -51,19 +51,19 @@ class StudentProgressRepository implements StudentProgressRepositoryInterface
         // Get total number of section contents in the course
         $course->load('courseSections.sectionContents');
         $totalContents = $course->courseSections->flatMap->sectionContents->count();
-        
+
         if ($totalContents === 0) {
             return 0;
         }
-        
+
         // Get number of completed contents
         $completedContents = StudentProgress::where('user_id', $user->id)
             ->where('course_id', $course->id)
             ->count();
-        
+
         return ($completedContents / $totalContents) * 100;
     }
-    
+
     /**
      * Get all courses with progress for a user
      */
@@ -73,7 +73,7 @@ class StudentProgressRepository implements StudentProgressRepositoryInterface
         $courses = Course::whereHas('courseStudents', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })->with(['courseSections.sectionContents', 'category'])->get();
-        
+
         // Calculate progress for each course
         return $courses->map(function ($course) use ($user) {
             $course->progress_percentage = $this->getProgressPercentage($user, $course);
@@ -85,7 +85,7 @@ class StudentProgressRepository implements StudentProgressRepositoryInterface
                 ->where('course_id', $course->id)
                 ->latest('completed_at')
                 ->first()?->completed_at;
-                
+
             return $course;
         });
     }
