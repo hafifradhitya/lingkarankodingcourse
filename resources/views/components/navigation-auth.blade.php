@@ -405,7 +405,7 @@
                             <a href="{{ route('dashboard') }}">My Courses</a>
                         </li>
                         <li class="hover:text-obito-green transition-all duration-300">
-                            <a href="#">Certificates</a>
+                            <a href="{{ route('dashboard.certificates') }}">Certificates</a>
                         </li>
                         <li class="hover:text-obito-green transition-all duration-300">
                             <a href="{{ route('dashboard.subscriptions') }}">Subscriptions</a>
@@ -495,7 +495,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="{{ request()->is('certificates*') ? 'active' : '' }}">
+                <a href="{{ route('dashboard.certificates') }}" class="{{ request()->routeIs('dashboard.certificates') ? 'active' : '' }}">
                     Certificates
                 </a>
             </li>

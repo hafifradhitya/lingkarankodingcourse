@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="buttons grid grid-cols-2 gap-[12px]">
-                <a href="#"
+                <a href="{{ route('dashboard.course.certificate', $course->slug) }}"
                     class="border border-obito-grey rounded-full py-[10px] flex justify-center items-center hover:border-obito-green transition-all duration-300">
                     <span class="font-semibold">Get My Certificate</span>
                 </a>

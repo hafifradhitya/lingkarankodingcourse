@@ -24,7 +24,8 @@ class StudentProgressRepository implements StudentProgressRepositoryInterface
             ],
             [
                 'course_id' => $course->id,
-                'completed_at' => Carbon::now(),
+                // Tidak mengisi completed_at di sini, hanya akan diisi di CourseController::learning_finished
+                // saat semua konten telah selesai
             ]
         );
 

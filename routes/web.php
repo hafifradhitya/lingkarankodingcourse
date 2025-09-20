@@ -46,7 +46,16 @@ Route::middleware('auth')->group(function () {
             ->name('dashboard.course.learning');
 
             Route::get('/dashboard/learning/{course:slug}/finished', [CourseController::class, 'learning_finished'])
-            ->name('dashboard.course.learning.finished');
+        ->name('dashboard.course.learning.finished');
+
+        Route::get('/dashboard/course/{course:slug}/certificate', [CourseController::class, 'showCertificate'])
+        ->name('dashboard.course.certificate');
+
+        Route::get('/dashboard/course/{course:slug}/certificate/download', [CourseController::class, 'downloadCertificate'])
+        ->name('dashboard.course.certificate.download');
+
+        Route::get('/dashboard/certificates', [CourseController::class, 'certificates'])
+        ->name('dashboard.certificates');
         });
 
         Route::get('/checkout/failed', [FrontController::class, 'checkout_failed'])
@@ -65,7 +74,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/dashboard/course/{course:slug}/testimonial', [CourseController::class, 'storeTestimonial'])
             ->name('dashboard.course.testimonial.store');
         });
-        
+
         // User Settings Routes
         Route::get('/dashboard/settings', [FrontController::class, 'settings'])
         ->name('dashboard.settings');
